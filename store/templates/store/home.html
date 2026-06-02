@@ -1,0 +1,273 @@
+{% extends 'store/base.html' %}
+{% block title %}Sir,Meng Rith - Best Laptops & PC Hardware{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero {
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1a56db 100%);
+    padding: 60px 48px; margin-bottom: 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 280px;
+}
+.hero-title {
+    font-size: clamp(1.8rem, 4vw, 3rem); 
+    font-weight: 800; color: #fff; 
+    margin-bottom: 16px; 
+}
+.hero-title span { 
+    color: #60a5fa; 
+}
+.hero-sub { 
+    color: #94a3b8; 
+    margin-bottom: 28px; 
+}
+.hero-btn {
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all .2s;
+}
+.hero-btn-primary {
+    background: #1a56db;
+    color: #fff;
+}
+.hero-btn-primary:hover {
+    background: #1341b0;
+    transform: translateY(-1px);
+}
+.hero-btn-secondary {
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,.3);
+}
+.hero-btn-secondary:hover {
+    background: rgba(255,255,255,.2);
+    transform: translateY(-1px);
+}
+.brands-ticker-wrap { 
+    background: #fff; 
+    border-radius: 12px; 
+    padding: 20px 28px; 
+    display: flex; 
+    align-items: center; 
+    gap: 32px; 
+    overflow-x: auto; 
+    box-shadow: var(--shadow-sm); 
+    margin-bottom: 36px; 
+}
+.top-brands { 
+    padding: 14px 20px;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--gray-500);
+    white-space: nowrap;
+    border-right: 1px solid var(--gray-300);
+    background: #fff;
+    z-index: 2;
+}
+.brands-ticker-track {
+    flex: 1;
+    overflow: hidden;
+    display:flex;
+}
+.brands-name{
+    display: flex;
+    gap: 48px;
+    animation: ticker-scroll 20s linear infinite;
+    width: max-content;
+}
+.ticker-brand {
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--dark);
+    white-space: nowrap;
+    padding: 14px 0;
+    transition: color .2s;
+}
+.ticker-brand:hover {
+    color: var(--primary);
+}
+.brands-name:hover {
+    animation-play-state: paused;
+}
+@keyframes ticker-scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+.cat-grid { 
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 16px; 
+    margin-bottom: 36px; 
+}
+.cat-card { 
+    background: #fff; 
+    border-radius: 12px; 
+    padding: 24px 16px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 10px; 
+    box-shadow: var(--shadow-sm); 
+    transition: all .2s; 
+    border: 1.5px solid transparent; 
+}
+.cat-card:hover { 
+    box-shadow: var(--shadow-md); 
+    border-color: var(--primary); 
+    transform: translateY(-2px); 
+}
+.cat-card span { 
+    font-size: .875rem; 
+    font-weight: 600; 
+}
+.cat-icon { 
+    width:52px; 
+    height:52px; 
+    background:var(--gray-100); 
+    border-radius:12px; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+}
+.cat-icon i { 
+    font-size:1.4rem; 
+    color:var(--primary); 
+}
+.section-header { 
+    display: flex; 
+    align-items: center; 
+    justify-content: 
+    space-between; 
+    margin-bottom: 20px; 
+}
+.section-title { 
+    font-size: 1.3rem; 
+    font-weight: 700; 
+}
+.section-title span { color: var(--primary); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div>
+        <h1 class="hero-title">Build Your Dream<br><span>PC Setup</span></h1>
+        <p class="hero-sub">Latest laptops, components, and peripherals from top brands.</p>
+        <div style="display:flex; flex-direction:row; gap:12px; flex-wrap:wrap;">
+            <a href="{% url 'store:category' slug='laptop' %}" class="hero-btn hero-btn-primary">
+                <i class="fas fa-laptop" style="margin-right:8px;"></i>Laptops
+            </a>
+            <a href="{% url 'store:category' slug='pc-hardware' %}" class="hero-btn hero-btn-secondary">
+                <i class="fas fa-microchip" style="margin-right:8px;"></i>PC Hardware
+            </a>
+            <a href="{% url 'store:category' slug='peripherals' %}" class="hero-btn hero-btn-primary">
+                <i class="fas fa-keyboard" style="margin-right:8px;"></i>Peripherals
+            </a>
+            <a href="{% url 'store:category' slug='accessories' %}" class="hero-btn hero-btn-secondary">
+                <i class="fas fa-plug" style="margin-right:8px;"></i>Accessories
+            </a>
+            <a href="{% url 'store:category' slug='pc-sets' %}" class="hero-btn hero-btn-primary">
+                <i class="fas fa-desktop" style="margin-right:8px;"></i>PC Sets
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if top_brands %}
+<div class="brands-ticker-wrap">
+    <div class="top-brands">TOP BRANDS</div>
+    <div class="brands-ticker-track">
+        <div class="brands-name">
+            {% for brand in top_brands %}
+            <a href="#" class="ticker-brand">{{ brand.name }}</a>
+            {% endfor %}
+            <!-- Duplicate for seamless loop -->
+            {% for brand in top_brands %}
+            <a href="#" class="ticker-brand">{{ brand.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% comment %} <div style="margin-bottom:36px;">
+    <div class="section-header">
+        <h2 class="section-title">Shop by <span>Category</span></h2>
+    </div>
+<div class="cat-grid">
+    {% for cat in categories %}
+    <a href="{{ cat.get_absolute_url }}" class="cat-card">
+        <div class="cat-icon">
+            {% if cat.slug == 'laptop' %}
+                <i class="fas fa-laptop"></i>
+            {% elif cat.slug == 'pc-hardware' %}
+                <i class="fas fa-microchip"></i>
+            {% elif cat.slug == 'peripherals' %}
+                <i class="fas fa-keyboard"></i>
+            {% elif cat.slug == 'accessories' %}
+                <i class="fas fa-plug"></i>
+            {% elif cat.slug == 'pc-sets' %}
+                <i class="fas fa-desktop"></i>
+            {% else %}
+                <i class="fas fa-tag"></i>
+            {% endif %}
+        </div>
+        <span>{{ cat.name }}</span>
+    </a>
+    {% endfor %}
+</div>
+</div> {% endcomment %}
+
+{% if featured_products %}
+<div>
+    <div class="section-header">
+        <h2 class="section-title">Featured <span>Products</span></h2>
+    </div>
+    <div class="product-grid">
+        {% for product in featured_products %}
+        <div class="product-card">
+            <a href="{{ product.get_absolute_url }}" class="product-card-img">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                <i class="fas fa-laptop" style="font-size:3rem;color:var(--gray-300);"></i>
+                {% endif %}
+            </a>
+            <div class="product-card-body">
+                {% if product.brand %}<span class="product-brand">{{ product.brand.name }}</span>{% endif %}
+                <a href="{{ product.get_absolute_url }}" class="product-name">{{ product.name }}</a>
+                <div class="product-price">
+                    <span class="price-now">${{ product.price }}</span>
+                    {% if product.original_price %}
+                    <span class="price-was">${{ product.original_price }}</span>
+                    <span class="badge-discount">-{{ product.discount_percent }}%</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="product-card-actions">
+                <a href="{% url 'store:add_to_cart' product.id %}" class="btn-cart">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                </a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'store:toggle_wishlist' product.id %}" class="btn-wish">
+                    <i class="far fa-heart"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

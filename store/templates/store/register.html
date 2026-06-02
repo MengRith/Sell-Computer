@@ -1,0 +1,42 @@
+{% extends 'store/base.html' %}
+{% block title %}Register - MR Custom{% endblock %}
+
+{% block extra_css %}
+<style>
+input[type=text], input[type=password] {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--gray-300);
+    border-radius: 8px; font-size: .9rem;
+    transition: border-color .15s; outline: none;
+}
+input[type=text]:focus, input[type=password]:focus { border-color: var(--primary); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="max-width:420px;margin:40px auto;">
+    <div style="background:#fff;border-radius:16px;padding:40px;box-shadow:var(--shadow-md);">
+        <h1 style="font-size:1.6rem;font-weight:800;margin-bottom:8px;">Create Account</h1>
+        <p style="color:var(--gray-500);margin-bottom:28px;">Join MR Custom today</p>
+        <form method="post" style="display:flex;flex-direction:column;gap:16px;">
+            {% csrf_token %}
+            {% for field in form %}
+            <div>
+                <label style="display:block;font-size:.875rem;font-weight:600;margin-bottom:6px;">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div style="color:var(--danger);font-size:.8rem;margin-top:4px;">{{ field.errors }}</div>
+                {% endif %}
+                {% if field.help_text %}
+                <div style="color:var(--gray-500);font-size:.75rem;margin-top:4px;">{{ field.help_text }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary" style="justify-content:center;padding:13px;">Create Account</button>
+        </form>
+        <p style="text-align:center;margin-top:20px;font-size:.875rem;color:var(--gray-500);">
+            Already have an account? <a href="{% url 'store:login' %}" style="color:var(--primary);font-weight:600;">Sign in</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sir,Meng Rith Custom{% endblock %}</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --primary: #1a56db;
+            --primary-dark: #1341b0;
+            --danger: #ef4444;
+            --success: #10b981;
+            --dark: #0f172a;
+            --gray-700: #334155;
+            --gray-500: #64748b;
+            --gray-300: #cbd5e1;
+            --gray-100: #f1f5f9;
+            --gray-50: #f8fafc;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,.12);
+            --radius: 10px;
+            --radius-sm: 6px;
+        }
+
+        body { 
+            font-family: 'Outfit', sans-serif;
+            background: var(--gray-50);
+            color: var(--dark); 
+        }
+        a { 
+            text-decoration: none; 
+            color: inherit;
+        }
+
+        /* Header */
+        .site-header { background: var(--white); border-bottom: 1px solid var(--gray-100); position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .header-top { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 70px; display: flex; align-items: center; gap: 24px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.3rem; }
+        .logo-box { width: 40px; height: 40px; border: 2.5px solid var(--dark); display: flex; align-items: center; justify-content: center; font-size: .85rem; font-weight: 700; }
+        .search-bar { flex: 1; max-width: 520px; display: flex; align-items: center; background: var(--gray-100); border-radius: 50px; padding: 0 8px 0 20px; border: 1.5px solid transparent; transition: border-color .2s; }
+        .search-bar:focus-within { border-color: var(--primary); background: var(--white); }
+        .search-bar input { flex: 1; border: none; background: transparent; padding: 10px 8px; font-size: .9rem; outline: none; }
+        .search-bar button { background: var(--primary); color: var(--white); border: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .header-actions { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+        .header-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; font-size: .875rem; font-weight: 500; color: var(--gray-700); position: relative; transition: background .15s; }
+        .header-btn:hover { background: var(--gray-100); }
+        .badge { position: absolute; top: 4px; right: 8px; background: var(--primary); color: var(--white); font-size: .65rem; font-weight: 700; min-width: 17px; height: 17px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+        .btn-primary-sm { background: var(--primary); color: var(--white); padding: 8px 18px; border-radius: 8px; font-size: .875rem; font-weight: 600; }
+
+        /* Nav */
+        .nav-bar { background: var(--white); border-bottom: 1px solid var(--gray-100); }
+        .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; }
+        .nav-item { display: flex; align-items: center; gap: 8px; padding: 14px 22px; font-size: .875rem; font-weight: 500; color: var(--gray-700); border-bottom: 3px solid transparent; transition: color .15s, border-color .15s; }
+        .nav-item:hover, .nav-item.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+        /* Main */
+        .main-content { max-width: 1280px; margin: 0 auto; padding: 24px; }
+        
+        /*Back Top Button*/
+        #backTopBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 20px;
+        z-index: 999;
+        background-color: #7dc143;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 10px;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        display: none;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        align-items: center;
+        gap: 6px;
+        letter-spacing: 1px;
+        }
+        #backTopBtn:hover {
+            background-color: #6aad32;
+        }
+
+        /* Product Card */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .product-card { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; transition: box-shadow .2s, transform .2s; }
+        .product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .product-card-img { aspect-ratio: 4/3; overflow: hidden; background: var(--gray-50); display: flex; align-items: center; justify-content: center; }
+        .product-card-img img { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
+        .product-card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .product-brand { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--primary); font-weight: 600; }
+        .product-name { font-size: .9rem; font-weight: 600; line-height: 1.4; }
+        .product-price { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+        .price-now { font-size: 1.05rem; font-weight: 700; }
+        .price-was { font-size: .8rem; color: var(--gray-500); text-decoration: line-through; }
+        .badge-discount { background: var(--danger); color: var(--white); font-size: .7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+        .product-card-actions { padding: 0 16px 16px; display: flex; gap: 8px; }
+        .btn-cart { flex: 1; padding: 9px; background: var(--primary); color: var(--white); border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: .85rem; transition: background .2s; }
+        .btn-cart:hover { background: var(--primary-dark); }
+        .btn-wish { width: 38px; height: 38px; border: 1.5px solid var(--gray-300); border-radius: var(--radius-sm); background: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+        .btn-wish:hover, .btn-wish.active { border-color: var(--danger); color: var(--danger); }
+
+        /* Buttons */
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-sm); font-weight: 600; font-size: .875rem; cursor: pointer; border: none; }
+        .btn-primary { background: var(--primary); color: var(--white); }
+        .btn-primary:hover { background: var(--primary-dark); }
+
+        /* Footer */
+        footer { background: var(--dark); color: #94a3b8; margin-top: 60px; padding: 40px 24px 24px; }
+        .footer-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-bottom: 32px; }
+        .footer-col h4 { color: var(--white); font-weight: 700; margin-bottom: 12px; }
+        .footer-col a { display: block; color: #64748b; margin-bottom: 8px; font-size: .875rem; }
+        .footer-col a:hover { color: var(--white); }
+        .footer-bottom { max-width: 1280px; margin: 0 auto; border-top: 1px solid #334155; padding-top: 20px; display: flex; justify-content: space-between; font-size: .8rem; color: #64748b; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-top">
+        <a href="{% url 'store:home' %}" class="logo">
+            <div class="logo-box">MR</div>
+            CUSTOM
+        </a>
+        <form class="search-bar" action="{% url 'store:search' %}" method="get">
+            <input type="text" name="q" placeholder="Search products, brands..." value="{{ request.GET.q }}">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+        <div class="header-actions">
+            <a href="{% url 'store:wishlist' %}" class="header-btn">
+                <i class="far fa-heart" style="font-size:1.1rem;"></i>
+            </a>
+            <a href="{% url 'store:cart' %}" class="header-btn">
+                <i class="fas fa-shopping-cart" style="font-size:1.1rem;"></i>
+                {% if cart_count > 0 %}<span class="badge">{{ cart_count }}</span>{% endif %}
+            </a>
+            {% if user.is_authenticated %}
+                <span class="header-btn">Hi, {{ user.username }}</span>
+                <a href="{% url 'store:logout' %}" class="header-btn">Sign out</a>
+            {% else %}
+                <a href="{% url 'store:login' %}" class="header-btn">Sign in</a>
+                <a href="{% url 'store:register' %}" class="btn-primary-sm">Join</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+{% comment %} <nav class="nav-bar">
+    <div class="nav-inner">
+        {% for cat in categories %}
+        <a href="{{ cat.get_absolute_url }}" class="nav-item {% if request.resolver_match.kwargs.slug == cat.slug %}active{% endif %}">
+            {% if cat.slug == 'laptop' %}
+                <i class="fas fa-laptop"></i>
+            {% elif cat.slug == 'pc-hardware' %}
+                <i class="fas fa-microchip"></i>
+            {% elif cat.slug == 'peripherals' %}
+                <i class="fas fa-keyboard"></i>
+            {% elif cat.slug == 'accessories' %}
+                <i class="fas fa-plug"></i>
+            {% elif cat.slug == 'pc-sets' %}
+                <i class="fas fa-desktop"></i>
+            {% else %}
+                <i class="fas fa-tag"></i>
+            {% endif %}
+            {{ cat.name }}
+        </a>
+        {% endfor %}
+    </div>
+</nav> {% endcomment %}
+
+{% if messages %}
+<div style="max-width:1280px; margin:12px auto 0; padding:0 24px;">
+    {% for message in messages %}
+    <div style="padding:12px 16px; border-radius:6px; margin-bottom:8px; background:#dcfce7; color:#166534; border-left:4px solid #10b981;">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main class="main-content">
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>MR CUSTOM</h4>
+            <p style="font-size:.875rem; line-height:1.7;">Your one-stop shop for laptops, PC hardware, peripherals, and accessories.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Shop</h4>
+            {% for cat in categories %}<a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>{% endfor %}
+        </div>
+        <div class="footer-col">
+            <h4>Account</h4>
+            <a href="{% url 'store:login' %}">Sign In</a>
+            <a href="{% url 'store:register' %}">Register</a>
+            <a href="{% url 'store:cart' %}">My Cart</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="#">Contact Us</a>
+            <a href="#">FAQ</a>
+            <a href="#">Return Policy</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2025 Meng Rith Custom. All rights reserved.</span>
+        <span>Built with Django</span>
+    </div>
+</footer>
+
+<script>
+// AJAX add to cart
+document.querySelectorAll('.btn-cart-ajax').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const res = await fetch(btn.dataset.url, {
+            headers: { 'x-requested-with': 'XMLHttpRequest' }
+        });
+        const data = await res.json();
+        document.querySelectorAll('.badge').forEach(b => b.textContent = data.count);
+        btn.textContent = '✓ Added';
+        setTimeout(() => btn.textContent = 'Add to Cart', 1500);
+    });
+});
+</script>
+{% block extra_js %}{% endblock %}
+
+
+<!-- Back to Top Button -->
+<button id="backTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fas fa-arrow-up"></i>
+    <br><span>BACK TOP</span>
+</button>
+
+<script>
+    const backBtn = document.getElementById('backTopBtn');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            backBtn.style.display = 'block';
+        } else {
+            backBtn.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>

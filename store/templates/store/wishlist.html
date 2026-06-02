@@ -1,0 +1,46 @@
+{% extends 'store/base.html' %}
+{% block title %}Wishlist - MR Custom{% endblock %}
+
+{% block content %}
+<h1 style="font-size:1.5rem;font-weight:800;margin-bottom:24px;">My Wishlist ({{ wishlist.products.count }} items)</h1>
+
+{% if wishlist.products.all %}
+<div class="product-grid">
+    {% for product in wishlist.products.all %}
+    <div class="product-card">
+        <a href="{{ product.get_absolute_url }}" class="product-card-img">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <i class="fas fa-laptop" style="font-size:3rem;color:var(--gray-300);"></i>
+            {% endif %}
+        </a>
+        <div class="product-card-body">
+            {% if product.brand %}<span class="product-brand">{{ product.brand.name }}</span>{% endif %}
+            <a href="{{ product.get_absolute_url }}" class="product-name">{{ product.name }}</a>
+            <div class="product-price">
+                <span class="price-now">${{ product.price }}</span>
+                {% if product.original_price %}<span class="price-was">${{ product.original_price }}</span>{% endif %}
+            </div>
+        </div>
+        <div class="product-card-actions">
+            <a href="{% url 'store:add_to_cart' product.id %}" class="btn-cart">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+            </a>
+            <a href="{% url 'store:toggle_wishlist' product.id %}" class="btn-wish active" title="Remove">
+                <i class="fas fa-heart"></i>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="text-align:center;padding:80px;color:var(--gray-500);">
+    <i class="far fa-heart" style="font-size:4rem;margin-bottom:16px;display:block;"></i>
+    <h3 style="font-size:1.3rem;color:var(--dark);margin-bottom:8px;">Your wishlist is empty</h3>
+    <a href="{% url 'store:home' %}" class="btn btn-primary">
+        <i class="fas fa-store"></i> Browse Products
+    </a>
+</div>
+{% endif %}
+{% endblock %}

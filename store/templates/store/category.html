@@ -1,0 +1,122 @@
+{% extends 'store/base.html' %}
+{% block title %}{{ category.name }} - MR Custom{% endblock %}
+
+{% block extra_css %}
+<style>
+.cat-layout { display: flex; gap: 24px; }
+.sidebar { width: 220px; flex-shrink: 0; }
+.sidebar-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
+.sidebar-title { font-size: .8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-500); font-weight: 700; margin-bottom: 14px; }
+.brand-list { display: flex; flex-direction: column; gap: 4px; }
+.brand-link { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: .875rem; color: var(--gray-700); transition: all .15s; }
+.brand-link:hover, .brand-link.active { background: var(--gray-100); color: var(--primary); font-weight: 600; }
+.brand-link.active { background: #eff6ff; color: var(--primary); }
+.products-area { flex: 1; min-width: 0; }
+.cat-header { background: #fff; border-radius: 12px; padding: 20px 24px; box-shadow: var(--shadow-sm); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+.cat-header-left h1 { font-size: 1.4rem; font-weight: 700; }
+.cat-header-left p { font-size: .875rem; color: var(--gray-500); }
+.sort-select { padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--gray-300); font-size: .875rem; cursor: pointer; }
+.no-products { text-align: center; padding: 60px; color: var(--gray-500); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="cat-layout">
+    <aside class="sidebar">
+    {% if category.slug == 'pc-hardware' %}
+    <div class="sidebar-card">
+        <div class="sidebar-title">Type</div>
+        <div class="brand-list">
+            <a href="?sort={{ sort }}{% if selected_brand %}&brand={{ selected_brand.slug }}{% endif %}"
+               class="brand-link {% if not selected_type %}active{% endif %}">All Types</a>
+            {% for value, label in pc_types %}
+            <a href="?type={{ value }}&sort={{ sort }}{% if selected_brand %}&brand={{ selected_brand.slug }}{% endif %}"
+               class="brand-link {% if selected_type == value %}active{% endif %}">
+                {{ label }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="sidebar-card">
+        <div class="sidebar-title">Brand</div>
+        <div class="brand-list">
+            <a href="?sort={{ sort }}{% if selected_type %}&type={{ selected_type }}{% endif %}"
+               class="brand-link {% if not selected_brand %}active{% endif %}">All Brands</a>
+            {% for brand in brands %}
+            <a href="?brand={{ brand.slug }}&sort={{ sort }}{% if selected_type %}&type={{ selected_type }}{% endif %}"
+               class="brand-link {% if selected_brand.slug == brand.slug %}active{% endif %}">
+                {{ brand.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</aside>
+
+    <div class="products-area">
+        <div class="cat-header">
+            <div class="cat-header-left">
+                <h1>{{ category.name }}</h1>
+                <p>{{ products.count }} product{{ products.count|pluralize }} found{% if selected_brand %} for {{ selected_brand.name }}{% endif %}</p>
+            </div>
+            <select class="sort-select" onchange="window.location='?{% if selected_brand %}brand={{ selected_brand.slug }}&{% endif %}{% if selected_type %}type={{ selected_type }}&{% endif %}sort='+this.value">
+                <option value="default" {% if sort == 'default' %}selected{% endif %}>Default</option>
+                <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest First</option>
+                <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low → High</option>
+                <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High → Low</option>
+            </select>
+        </div>
+
+        {% if products %}
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{{ product.get_absolute_url }}" class="product-card-img">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                    <i class="fas fa-laptop" style="font-size:3rem;color:var(--gray-300);"></i>
+                    {% endif %}
+                </a>
+                <div class="product-card-body">
+                    {% if product.brand %}<span class="product-brand">{{ product.brand.name }}</span>{% endif %}
+                    <a href="{{ product.get_absolute_url }}" class="product-name">{{ product.name }}</a>
+                    {% if not product.in_stock %}
+                    <span style="background:var(--gray-300);color:var(--gray-700);font-size:.7rem;padding:2px 8px;border-radius:4px;">
+                        Out of stock
+                    </span>
+                    {% endif %}
+                    <div class="product-price">
+                        <span class="price-now">${{ product.price }}</span>
+                        {% if product.original_price %}
+                        <span class="price-was">${{ product.original_price }}</span>
+                        <span class="badge-discount">-{{ product.discount_percent }}%</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if product.in_stock %}
+                <div class="product-card-actions">
+                    <a href="{% url 'store:add_to_cart' product.id %}" class="btn-cart">
+                        <i class="fas fa-cart-plus"></i> Add to Cart
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'store:toggle_wishlist' product.id %}" class="btn-wish">
+                        <i class="far fa-heart"></i>
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-products">
+            <i class="fas fa-box-open" style="font-size:3rem;margin-bottom:12px;display:block;"></i>
+            <h3>No products found</h3>
+            <p>Try a different brand or <a href="{{ category.get_absolute_url }}" style="color:var(--primary)">clear filters</a>.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
