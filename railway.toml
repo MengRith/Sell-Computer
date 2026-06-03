@@ -1,0 +1,2 @@
+[deploy]
+startCommand = "gunicorn Sell_Computer.wsgi"
